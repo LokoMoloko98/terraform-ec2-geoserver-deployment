@@ -1,11 +1,11 @@
 # Terraform EC2 GeoServer Deployment
 
-This repository contains Terraform code to provision an AWS EC2 instance specifically configured to host GeoServer. 
+This repository contains Terraform code to provision an AWS EC2 instance specifically configured to host an instance of Kartoza's docker-geoserver implemetation. This repo serves mainly as a proof-of-concept. 
 
 ## Features
 
 - Provision an EC2 instance on AWS
-- Install and configure GeoServer
+- Install and deploy Kartoza's docker-geoserver with a postgis backend.
 - Setup necessary security groups and IAM roles
 
 ## Prerequisites
@@ -13,6 +13,7 @@ This repository contains Terraform code to provision an AWS EC2 instance specifi
 - [Terraform](https://www.terraform.io/downloads.html) installed
 - AWS account with necessary permissions
 - SSH key pair for EC2 access
+- A Route53 managed domain
 
 ## Usage
 
@@ -22,38 +23,36 @@ This repository contains Terraform code to provision an AWS EC2 instance specifi
     cd terraform-ec2-geoserver-deployment
     ```
 
-2. **Initialize Terraform:**
+2. **Initialize Terraform and connect it to your AWS backend:**
     ```sh
     terraform init
     ```
 
 3. **Review and modify variables:**
-    - Edit `variables.tf` to configure your AWS region, instance type, and other settings.
+    Make a copy of the `template.tfvars` and rename it to `terraform.tfvars` and provide the relevant values of the variables in that file to configure your AWS region, instance type, and other settings.
 
-4. **Apply the Terraform configuration:**
-    ```sh
-    terraform apply
-    ```
 
-5. **Access GeoServer:**
-    - Once the instance is provisioned and GeoServer is installed, you can access it via the public IP address of the EC2 instance.
+4. **Review the virtual infrastructure to be provisioned by producing a terraform plan:**
 
-## Variables
+```sh
+terraform plan
+```
 
-The following variables can be configured in the `variables.tf` file:
+5. If you are satisfied with the plan, go ahead and provision the infrastructure:
+```sh
+terraform apply --auto-approve
+```
 
-- `aws_region`: The AWS region to deploy the instance.
-- `instance_type`: The type of EC2 instance.
-- `key_name`: The name of the SSH key pair for accessing the instance.
-- `geoserver_version`: The version of GeoServer to install.
+6. **Access GeoServer:**
+    Once the instance is provisioned and GeoServer is installed, you can access it via port ``8600`` of the public IP address or preferably the provided fqdn of the EC2 instance.
 
 ## Outputs
 
 The following outputs are provided:
 
-- `instance_id`: The ID of the EC2 instance.
-- `public_ip`: The public IP address of the EC2 instance.
-- `geoserver_url`: The URL to access GeoServer.
+- `geoserver_node_instance_id`: The ID of the EC2 instance.
+- `geoserver_node_ip`: The public IP address of the EC2 instance.
+- `geoserver_node_url`: The URL to access GeoServer.
 
 ## Cleanup
 
