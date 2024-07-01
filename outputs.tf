@@ -7,5 +7,5 @@ output "geoserver_node_instance_id" {
 }
 
 output "geoserver_node_url" {
-  value = "https://${var.project_name}.${domain_name}"
+  value = "https://${var.project_name}.${var.domain_name}:8600"
 }
